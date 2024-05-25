@@ -25,8 +25,6 @@
 
   <ItemGroup>
     <Folder Include="Implementations\" />
-    <Folder Include="Dependency\" />
-    <Folder Include="Persistence\" />
   </ItemGroup>
 
 </Project>
