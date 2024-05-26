@@ -59,6 +59,8 @@ namespace Infrastructure.Implementations.Repositories
         {
             ArgumentNullException.ThrowIfNull(entityToUpdate);
 
+            _dbContext.Update(entityToUpdate);
+
             await _dbContext.SaveChangesAsync();
         }
 

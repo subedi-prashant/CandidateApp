@@ -14,6 +14,8 @@ builder.Services.AddCors();
 
 builder.Services.AddInfrastructureServices(configuration);
 
+builder.Services.AddMemoryCache();
+
 var app = builder.Build();
 
 app.UseSwagger();

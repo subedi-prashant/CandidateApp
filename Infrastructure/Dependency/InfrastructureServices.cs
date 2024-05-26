@@ -1,5 +1,7 @@
 ﻿using Application.Interfaces.GenericRepository;
+using Application.Interfaces.Services;
 using Infrastructure.Implementations.Repositories;
+using Infrastructure.Implementations.Services;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -18,6 +20,7 @@ namespace Infrastructure.Dependency
                     b => b.MigrationsAssembly("Infrastructure")));
 
             services.AddTransient<IGenericRepository, GenericRepository>();
+            services.AddScoped<ICandidateService,CandidateService >();
 
             return services;
         }

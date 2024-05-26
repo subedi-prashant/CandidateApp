@@ -10,8 +10,6 @@ namespace Application.DTOs.Base
 
         public string Message { get; set; }
 
-        public int? TotalCount { get; set; }
-
         public T Data { get; set; }
     }
 }

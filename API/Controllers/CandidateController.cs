@@ -54,13 +54,13 @@ namespace API.Controllers
                     Status = "Error",
                     Message = "Failed to add/update candidate",
                     StatusCode = HttpStatusCode.InternalServerError,
-                    Data = null
+                    Data = ""
                 };
 
                 return StatusCode((int)HttpStatusCode.InternalServerError, errorResponse);
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }
