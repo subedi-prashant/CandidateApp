@@ -19,48 +19,55 @@ namespace Infrastructure.Implementations.Services
         }
         public async Task<bool> AddUpdateCandidate(CandidateInfoDTO candidate)
         {
-            var cacheKey = $"Candidate-{candidate.Email}";
-
-            if (!_cache.TryGetValue(cacheKey, out CandidateInfo? candidateInfo))
+            try
             {
-                candidateInfo = await _genericRepository.GetFirstOrDefaultAsync<CandidateInfo>(x => x.Email == candidate.Email);
-                if (candidateInfo != null)
+                var cacheKey = $"Candidate-{candidate.Email}";
+
+                if (!_cache.TryGetValue(cacheKey, out CandidateInfo? candidateInfo))
                 {
-                    _cache.Set(cacheKey, candidateInfo, _cacheExpiration);
+                    candidateInfo = await _genericRepository.GetFirstOrDefaultAsync<CandidateInfo>(x => x.Email == candidate.Email);
+                    if (candidateInfo != null)
+                    {
+                        _cache.Set(cacheKey, candidateInfo, _cacheExpiration);
+                    }
                 }
-            }
 
-            if (candidateInfo == null)
-            {
-                var newCandidate = new CandidateInfo()
+                if (candidateInfo == null)
                 {
-                    FirstName = candidate.FirstName,
-                    LastName = candidate.LastName,
-                    PhoneNumber = candidate.PhoneNumber ?? string.Empty,
-                    Email = candidate.Email,
-                    TimeIntervalToCall = candidate.TimeIntervalToCall ?? string.Empty,
-                    LinkedInProfile = candidate.LinkedInProfile ?? string.Empty,
-                    GitHubProfile = candidate.GitHubProfile ?? string.Empty,
-                    Comment = candidate.Comment
-                };
+                    var newCandidate = new CandidateInfo()
+                    {
+                        FirstName = candidate.FirstName,
+                        LastName = candidate.LastName,
+                        PhoneNumber = candidate.PhoneNumber ?? string.Empty,
+                        Email = candidate.Email,
+                        TimeIntervalToCall = candidate.TimeIntervalToCall ?? string.Empty,
+                        LinkedInProfile = candidate.LinkedInProfile ?? string.Empty,
+                        GitHubProfile = candidate.GitHubProfile ?? string.Empty,
+                        Comment = candidate.Comment
+                    };
 
-                await _genericRepository.InsertAsync(newCandidate);
+                    await _genericRepository.InsertAsync(newCandidate);
+                }
+                else
+                {
+                    candidateInfo.FirstName = candidate.FirstName;
+                    candidateInfo.LastName = candidate.LastName;
+                    candidateInfo.PhoneNumber = candidate.PhoneNumber ?? string.Empty;
+                    candidateInfo.Email = candidate.Email;
+                    candidateInfo.TimeIntervalToCall = candidate.TimeIntervalToCall ?? string.Empty;
+                    candidateInfo.LinkedInProfile = candidate.LinkedInProfile ?? string.Empty;
+                    candidateInfo.GitHubProfile = candidate.GitHubProfile ?? string.Empty;
+                    candidateInfo.Comment = candidate.Comment;
+                    candidateInfo.LastModifiedAt = DateTime.Now;
+
+                    await _genericRepository.UpdateAsync(candidateInfo);
+                }
+                return true;
             }
-            else
+            catch(Exception)
             {
-                candidateInfo.FirstName = candidate.FirstName;
-                candidateInfo.LastName = candidate.LastName;
-                candidateInfo.PhoneNumber = candidate.PhoneNumber ?? string.Empty;
-                candidateInfo.Email = candidate.Email;
-                candidateInfo.TimeIntervalToCall = candidate.TimeIntervalToCall ?? string.Empty;
-                candidateInfo.LinkedInProfile = candidate.LinkedInProfile ?? string.Empty;
-                candidateInfo.GitHubProfile = candidate.GitHubProfile ?? string.Empty;
-                candidateInfo.Comment = candidate.Comment;
-                candidateInfo.LastModifiedAt = DateTime.Now;
-
-                await _genericRepository.UpdateAsync(candidateInfo);
+               return false;
             }
-            return true;
         }
     }
 }

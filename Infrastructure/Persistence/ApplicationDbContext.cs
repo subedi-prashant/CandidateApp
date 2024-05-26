@@ -7,7 +7,7 @@ namespace Infrastructure.Persistence
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
-            Database.EnsureCreated();
+
         }
 
         public DbSet<CandidateInfo> Candidates { get; set; }

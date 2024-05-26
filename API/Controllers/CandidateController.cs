@@ -57,7 +57,7 @@ namespace API.Controllers
                     Data = ""
                 };
 
-                return StatusCode((int)HttpStatusCode.InternalServerError, errorResponse);
+                return BadRequest(errorResponse);
 
             }
             catch (Exception)
